@@ -1,3 +1,4 @@
+import shared
 import numpy as np
 import win32gui
 import win32ui
@@ -24,6 +25,27 @@ class WindowCapture:
             raise Exception('Window not found: {}'.format(window_name))
 
         # # get the window size
+        window_rect = win32gui.GetWindowRect(self.hwnd)
+        self.w = window_rect[2] - window_rect[0]
+        self.h = window_rect[3] - window_rect[1]
+
+        # # Offset screenshot as needed
+        self.w = self.w - 50
+        self.h = self.h - 50
+        self.cropped_x = 0
+        self.cropped_y = 50
+
+        # # set the cropped coordinates offset so we can translate screenshot
+        # # images into actual screen positions
+        self.offset_x = window_rect[0] + self.cropped_x
+        self.offset_y = window_rect[1] + self.cropped_y
+
+        shared.ssheight = self.h
+
+    def get_screenshot(self):
+
+        # TESTING
+        # get the window size
         # window_rect = win32gui.GetWindowRect(self.hwnd)
         # self.w = window_rect[2] - window_rect[0]
         # self.h = window_rect[3] - window_rect[1]
@@ -38,25 +60,6 @@ class WindowCapture:
         # # images into actual screen positions
         # self.offset_x = window_rect[0] + self.cropped_x
         # self.offset_y = window_rect[1] + self.cropped_y
-
-    def get_screenshot(self):
-
-        # TESTING
-        # get the window size
-        window_rect = win32gui.GetWindowRect(self.hwnd)
-        self.w = window_rect[2] - window_rect[0]
-        self.h = window_rect[3] - window_rect[1]
-
-        # Offset screenshot as needed
-        self.w = self.w - 50
-        self.h = self.h - 50
-        self.cropped_x = 0
-        self.cropped_y = 50
-
-        # set the cropped coordinates offset so we can translate screenshot
-        # images into actual screen positions
-        self.offset_x = window_rect[0] + self.cropped_x
-        self.offset_y = window_rect[1] + self.cropped_y
         # END TESTING
 
         # get the window image data
@@ -92,7 +95,7 @@ class WindowCapture:
         # https://github.com/opencv/opencv/issues/14866#issuecomment-580207109
         img = np.ascontiguousarray(img)
 
-        return img, self.h
+        return img #, self.h
     
     def capture_win_alt(self):
     
