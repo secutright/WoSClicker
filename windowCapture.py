@@ -43,25 +43,6 @@ class WindowCapture:
         shared.ssheight = self.h
 
     def get_screenshot(self):
-
-        # TESTING
-        # get the window size
-        # window_rect = win32gui.GetWindowRect(self.hwnd)
-        # self.w = window_rect[2] - window_rect[0]
-        # self.h = window_rect[3] - window_rect[1]
-
-        # # Offset screenshot as needed
-        # self.w = self.w - 50
-        # self.h = self.h - 50
-        # self.cropped_x = 0
-        # self.cropped_y = 50
-
-        # # set the cropped coordinates offset so we can translate screenshot
-        # # images into actual screen positions
-        # self.offset_x = window_rect[0] + self.cropped_x
-        # self.offset_y = window_rect[1] + self.cropped_y
-        # END TESTING
-
         # get the window image data
         wDC = win32gui.GetWindowDC(self.hwnd)
         dcObj = win32ui.CreateDCFromHandle(wDC)
@@ -72,7 +53,6 @@ class WindowCapture:
         cDC.BitBlt((0, 0), (self.w, self.h), dcObj, (self.cropped_x, self.cropped_y), win32con.SRCCOPY)
 
         # convert the raw data into a format opencv can read
-        #dataBitMap.SaveBitmapFile(cDC, 'debug.bmp')
         signedIntsArray = dataBitMap.GetBitmapBits(True)
         img = np.fromstring(signedIntsArray, dtype='uint8')
         img.shape = (self.h, self.w, 4)
@@ -83,16 +63,10 @@ class WindowCapture:
         win32gui.ReleaseDC(self.hwnd, wDC)
         win32gui.DeleteObject(dataBitMap.GetHandle())
 
-        # drop the alpha channel, or cv.matchTemplate() will throw an error like:
-        #   error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() 
-        #   && _img.dims() <= 2 in function 'cv::matchTemplate'
+        # drop the alpha channel
         img = img[...,:3]
 
         # make image C_CONTIGUOUS to avoid errors that look like:
-        #   File ... in draw_rectangles
-        #   TypeError: an integer is required (got type tuple)
-        # see the discussion here:
-        # https://github.com/opencv/opencv/issues/14866#issuecomment-580207109
         img = np.ascontiguousarray(img)
 
         return img #, self.h
@@ -128,8 +102,6 @@ class WindowCapture:
         return img
 
     # find the name of the window you're interested in.
-    # once you have it, update window_capture()
-    # https://stackoverflow.com/questions/55547940/how-to-get-a-list-of-the-name-of-every-open-window
     def list_window_names(self):
         def winEnumHandler(hwnd, ctx):
             if win32gui.IsWindowVisible(hwnd):
