@@ -1,4 +1,3 @@
-import shared
 import numpy as np
 import win32gui
 import win32ui
@@ -12,9 +11,9 @@ class WindowCapture:
     w = 0
     h = 0
     hwnd = None
-    cropped_x = 20
+    cropped_x = 0
     cropped_y = 0
-    offset_x = 20
+    offset_x = 0
     offset_y = 0
 
     # constructor
@@ -40,7 +39,7 @@ class WindowCapture:
         self.offset_x = window_rect[0] + self.cropped_x
         self.offset_y = window_rect[1] + self.cropped_y
 
-        shared.ssheight = self.h
+        #shared.ssheight = self.h
 
     def get_screenshot(self):
         # get the window image data

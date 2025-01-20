@@ -1,4 +1,3 @@
-import shared
 import cv2 as cv
 import numpy as np
 
@@ -13,9 +12,9 @@ class Vision:
     originalssheight = 1475
 
     # constructor
-    def __init__(self, needle_img_path, method=cv.TM_CCOEFF_NORMED):
+    def __init__(self, needle_img_path, scale, method=cv.TM_CCOEFF_NORMED):
         # Calculate rescaling of needle
-        scale = shared.ssheight / Vision.originalssheight
+        #scale = shared.ssheight / Vision.originalssheight
         print('Scale: ' + str(scale))
         # load the image we're trying to match
         # https://docs.opencv.org/4.2.0/d4/da8/group__imgcodecs.html

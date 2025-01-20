@@ -1,15 +1,19 @@
-import shared
+from bot import Bot
 import cv2 as cv
-from time import time
+import time
 from windowCapture import WindowCapture
 from imageDetection import Vision
 
 wincap = WindowCapture('BlueStacks App Player')
-print('ssheight: ' + str(shared.ssheight))
-vision_allianceBtn = Vision('images\\AllianceBtn.png')
-vision_allianceHelpBtn = Vision('images\\AllianceHelp.png')
-vision_backArrow = Vision('images\\BackArrow.png')
-vision_helpAllBtn = Vision('images\\HelpAllBtn.png')
+helpAllBot = Bot((wincap.offset_x, wincap.cropped_y),(wincap.w, wincap.h))
+
+originalssheight = 1475
+scale = wincap.h / originalssheight
+
+# vision_allianceBtn = Vision('images\\AllianceBtn.png')
+# vision_allianceHelpBtn = Vision('images\\AllianceHelp.png')
+# vision_backArrow = Vision('images\\BackArrow.png')
+vision_helpAllBtn = Vision('images\\HelpAllBtn.png', scale)
 #vision_back = Vision('BackButtonUnscaled.png')
 
 while(True):
@@ -17,21 +21,25 @@ while(True):
     screenshot = wincap.get_screenshot()
 
     # Detect Objects
-    rectangles = vision_allianceBtn.find(screenshot, 0.8)
-    # pointsAllianceHelpBtn = vision_allianceHelpBtn.find(screenshot, 0.8)
-    # pointsBackArrow = vision_backArrow.find(screenshot, 0.8)
-    # pointsHelpAllBtn = vision_helpAllBtn.find(screenshot, 0.8)
-    # points = vision_back.find(screenshot, 0.7, 'points')
+    helpAllBtnRect = vision_helpAllBtn.find(screenshot, 0.8)
+
+    # Get click points from detection
+    helpAllBtnPoints = vision_helpAllBtn.get_click_points(helpAllBtnRect)
 
     # Draw detection results
-    output_image = vision_allianceBtn.draw_rectangles(screenshot, rectangles)
+    output_image = vision_helpAllBtn.draw_rectangles(screenshot, helpAllBtnRect)
 
     # Display image with markers
     cv.imshow('Matches', output_image)
 
-    loop_time = time()
+    # print(len(helpAllBtnPoints))
 
-    print('FPS {}'.format(1 / (time() - loop_time)))
+    if len(helpAllBtnPoints) > 0:
+        helpAllBot.click(helpAllBtnPoints[0])
+        time.sleep(0.5)
+
+    # loop_time = time()
+    # print('FPS {}'.format(1 / (time() - loop_time)))
                           
     if cv.waitKey(1) == ord('q'):
         cv.destroyAllWindows()
