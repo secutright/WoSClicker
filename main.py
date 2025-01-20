@@ -1,3 +1,5 @@
+### TODO: Create debug flag to stop imshow abd terminal for production run.
+
 from bot import Bot
 import cv2 as cv
 import time
@@ -32,8 +34,7 @@ while(True):
     # Display image with markers
     cv.imshow('Matches', output_image)
 
-    # print(len(helpAllBtnPoints))
-
+    # If Help All button is available, click it with Bot.click()
     if len(helpAllBtnPoints) > 0:
         helpAllBot.click(helpAllBtnPoints[0])
         time.sleep(0.5)
