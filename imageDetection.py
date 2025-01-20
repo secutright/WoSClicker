@@ -16,8 +16,7 @@ class Vision:
         # Calculate rescaling of needle
         #scale = shared.ssheight / Vision.originalssheight
         print('Scale: ' + str(scale))
-        # load the image we're trying to match
-        # https://docs.opencv.org/4.2.0/d4/da8/group__imgcodecs.html
+        # load the needle image
         self.needle_img = cv.imread(needle_img_path, cv.IMREAD_COLOR)
         self.needle_img = cv.resize(self.needle_img, None, fx=scale, fy=scale)
         # Save the dimensions of the needle image
@@ -29,13 +28,12 @@ class Vision:
         self.method = method
 
     def find(self, haystack_img, threshold=0.5):
-        # Run the OpenCV algorithm
+        # Run matchTemplate
         result = cv.matchTemplate(haystack_img, self.needle_img, self.method)
 
         # Get the all the positions from the match result that exceed our threshold
         locations = np.where(result >= threshold)
         locations = list(zip(*locations[::-1]))
-        #print(locations)
 
         # Return if no results
         if not locations:
