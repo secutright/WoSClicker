@@ -17,4 +17,5 @@ class Bot:
         print(f'Moving Mouse to X:{screen_x} Y:{screen_y}')
         pyautogui.moveTo(x=screen_x, y=screen_y)
         pyautogui.click()
-        print('Clicked')
+        self.HelpClicks += 1
+        print(f'Clicks: {self.HelpClicks}')

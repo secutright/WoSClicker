@@ -35,7 +35,7 @@ class WindowCapture:
         self.cropped_y = 50
 
         # # set the cropped coordinates offset so we can translate screenshot
-        # # images into actual screen positions
+        # # images into actual screen positions for later use with pyautogui to locate the mouse.
         self.offset_x = window_rect[0] + self.cropped_x
         self.offset_y = window_rect[1] + self.cropped_y
 
