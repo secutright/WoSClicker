@@ -39,8 +39,6 @@ class WindowCapture:
         self.offset_x = window_rect[0] + self.cropped_x
         self.offset_y = window_rect[1] + self.cropped_y
 
-        #shared.ssheight = self.h
-
     def get_screenshot(self):
         # get the window image data
         wDC = win32gui.GetWindowDC(self.hwnd)
@@ -65,10 +63,10 @@ class WindowCapture:
         # drop the alpha channel
         img = img[...,:3]
 
-        # make image C_CONTIGUOUS to avoid errors that look like:
+        # make image C_CONTIGUOUS
         img = np.ascontiguousarray(img)
 
-        return img #, self.h
+        return img
     
     def capture_win_alt(self):
     
@@ -106,11 +104,3 @@ class WindowCapture:
             if win32gui.IsWindowVisible(hwnd):
                 print(hex(hwnd), win32gui.GetWindowText(hwnd))
         win32gui.EnumWindows(winEnumHandler, None)
-
-    # translate a pixel position on a screenshot image to a pixel position on the screen.
-    # pos = (x, y)
-    # WARNING: if you move the window being captured after execution is started, this will
-    # return incorrect coordinates, because the window position is only calculated in
-    # the __init__ constructor.
-    def get_screen_position(self, pos):
-        return (pos[0] + self.offset_x, pos[1] + self.offset_y)
