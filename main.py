@@ -6,6 +6,8 @@ import time
 from windowCapture import WindowCapture
 from imageDetection import Vision
 
+DEBUG = False
+
 wincap = WindowCapture('BlueStacks App Player')
 helpAllBot = Bot((wincap.offset_x, wincap.cropped_y),(wincap.w, wincap.h))
 reconnectBot = Bot((wincap.offset_x, wincap.cropped_y),(wincap.w, wincap.h))
@@ -32,23 +34,25 @@ while(True):
     helpAllBtnPoints = vision_helpAllBtn.get_click_points(helpAllBtnRect)
     reconnectBtnPoints = vision_reconnectBtn.get_click_points(reconnectBtnRect)
 
-    # Draw detection results
-    output_image = vision_helpAllBtn.draw_rectangles(screenshot, helpAllBtnRect)
-
-    # Display image with markers
-    cv.imshow('Matches', output_image)
-
     # If Help All button is available, click it with Bot.click()
     if len(helpAllBtnPoints) > 0:
         helpAllBot.click(helpAllBtnPoints[0])
         time.sleep(0.5)
 
     if len(reconnectBtnPoints) > 0:
+        time.sleep(5)
         reconnectBot.click(reconnectBtnPoints[0])
         time.sleep(0.5)
 
-    # loop_time = time()
-    # print('FPS {}'.format(1 / (time() - loop_time)))
+    if DEBUG:
+        # Draw detection results and display them
+        output_image = vision_helpAllBtn.draw_rectangles(screenshot, helpAllBtnRect)
+        cv.imshow('Matches', output_image)
+        output_image = vision_reconnectBtn.draw_rectangles(screenshot, reconnectBtnRect)
+        cv.imshow
+        #loop_time = time()
+        #print('FPS {}'.format(1 / (time() - loop_time)))
+        print(f'Scale: {scale}')
                           
     if cv.waitKey(1) == ord('q'):
         cv.destroyAllWindows()
