@@ -13,11 +13,8 @@ class Vision:
 
     # constructor
     def __init__(self, needle_img_path, scale, method=cv.TM_CCOEFF_NORMED):
-        # Calculate rescaling of needle
-        #scale = shared.ssheight / Vision.originalssheight
-        print('Scale: ' + str(scale))
         # load the needle image
-        self.needle_img = cv.imread(needle_img_path, cv.IMREAD_COLOR)
+        self.needle_img = cv.imread(needle_img_path, cv.IMREAD_GRAYSCALE)
         self.needle_img = cv.resize(self.needle_img, None, fx=scale, fy=scale)
         # Save the dimensions of the needle image
         self.needle_w = self.needle_img.shape[1]
@@ -28,6 +25,7 @@ class Vision:
         self.method = method
 
     def find(self, haystack_img, threshold=0.5):
+        haystack_img = cv.cvtColor(haystack_img, cv.COLOR_BGR2GRAY)
         # Run matchTemplate
         result = cv.matchTemplate(haystack_img, self.needle_img, self.method)
 
