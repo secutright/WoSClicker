@@ -1,11 +1,16 @@
-### TODO: Create debug flag to stop imshow abd terminal for production run.
+### File List:
+### main.py: Main loop, checks screenshots through each loop for certain items, then respond as needed
+### imageDetection.py: Exposes a Vision class, essentially a wrapper for all opencv functions
+### windowCapture.py: Exposes WindowCapture class, is responsible for communicating with windows gui to take screenshots
+### bot.py: Handles click events, will eventually move more of the response logic in to here
 
-from bot import Bot
 import cv2 as cv
 import time
+from bot import Bot
 from windowCapture import WindowCapture
 from imageDetection import Vision
 
+# DEBUG = True will show computer vision output to see what opencv is seeing and will output FPS each loop
 DEBUG = False
 
 wincap = WindowCapture('BlueStacks App Player')
@@ -46,31 +51,51 @@ while(True):
         initialReconnectSleep = 1200
         print(f'Waiting {initialReconnectSleep/60} minutes to reconnect')
         time.sleep(initialReconnectSleep)
+
         # Click reconnect Button
         print('Clicking reconnect button')
         reconnectBot.click(reconnectBtnPoints[0])
         time.sleep(1)
+
         # Take Screenshot, look for exit button, and click
         screenshot = wincap.get_screenshot()
         exitBtnRects = vision_exitBtn.find(screenshot, 0.9)
         exitBtnPoints = vision_exitBtn.get_click_points(exitBtnRects)
+
+        if DEBUG:
+            output_image = vision_exitBtn.draw_rectangles(screenshot, exitBtnRects)
+            cv.imshow('Matches', output_image)
+
         if len(exitBtnRects) > 0:
             reconnectBot.click(exitBtnPoints[0])
         else:
             print('Exit Button not found!')
         time.sleep(1)
+
         # Take a new capture and find alliance button
         screenshot = wincap.get_screenshot()
         allianceBtnRects = vision_allianceBtn.find(screenshot, 0.8)
         allianceBtnPoints = vision_allianceBtn.get_click_points(allianceBtnRects)
+
+        if DEBUG:
+            output_image = vision_allianceBtn.draw_rectangles(screenshot, allianceBtnRects)
+            cv.imshow('Matches', output_image)
+
         if len(allianceBtnPoints) > 0:
             reconnectBot.click(allianceBtnPoints[0])
         else:
             print('Alliance Button not found!')
         time.sleep(1)
+
+        # Find and click Help button
         screenshot = wincap.get_screenshot()
         allianceHelpBtnRects = vision_allianceHelpBtn.find(screenshot, 0.8)
         allianceHelpBtnPoints = vision_allianceHelpBtn.get_click_points(allianceHelpBtnRects)
+
+        if DEBUG:
+            output_image = vision_allianceHelpBtn.draw_rectangles(screenshot, allianceHelpBtnRects)
+            cv.imshow('Matches', output_image)
+
         if len(allianceHelpBtnPoints) > 0:
             reconnectBot.click(allianceHelpBtnPoints[0])
         else:
