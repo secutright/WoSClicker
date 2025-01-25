@@ -3,6 +3,7 @@
 ### imageDetection.py: Exposes a Vision class, essentially a wrapper for all opencv functions
 ### windowCapture.py: Exposes WindowCapture class, is responsible for communicating with windows gui to take screenshots
 ### bot.py: Handles click events, will eventually move more of the response logic in to here
+### screenshotter.py: Just there to capture screenshots and save to file on a timer for future use with machine learning
 
 import cv2 as cv
 import time
