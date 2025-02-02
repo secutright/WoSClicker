@@ -1,3 +1,4 @@
+# Just a simple launcher to test various bot functions
 import time
 from YOLOBot import YOLOBot
 

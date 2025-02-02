@@ -13,6 +13,7 @@ class YOLOBot:
     offset_x = 0
     offset_y = 0
     model_output = []
+    help_clicks = 0
     # Thread variables
     lock = None
     run_model_stop = 0
@@ -44,7 +45,7 @@ class YOLOBot:
     
     def run_model(self):                # Function responsible for gathering model data from screenshots
         while self.run_model_stop == 0: # Loop while stop code == 0
-            print('Updating Model')     
+            # print('Updating Model')     
             screenshot = self.wincap.get_screenshot() # Get a screenshot
 
             results = self.model([screenshot], conf=0.80, save=False, verbose=False) # Run the screenshot through the YOLO model
@@ -84,11 +85,11 @@ class YOLOBot:
                                                     # Alliance "Help Hands", then Heal All button in that order
         while self.help_heal_bot_stop == 0:         # Loop while stop code == 0
 
-            print('Obtaining model data')
+            # print('Obtaining model data')
             self.lock.acquire()                     # Aquire thread lock
             model_data = self.model_output          # Assign data from Class Property to local variable
             self.lock.release()                     # Release thread lock
-            print(model_data)
+            # print(model_data)
             for i in model_data:                    # Iterate through data
                 name = i[0]                         # Break tuple in to variables
                 x = i[1][0]
@@ -107,9 +108,13 @@ class YOLOBot:
                 elif name == 'helpHand':
                     print('Clicking helpHand')
                     self.click(x, y)
+                    self.help_clicks += 1
+                    print(f'Helped {self.help_clicks} times')
 
                 elif name == 'helpAllBtn':
                     print('Clicking Help All Button')
                     self.click(x, y)
+                    self.help_clicks += 1
+                    print(f'Helped {self.help_clicks} times')
 
             time.sleep(0.1)                         # Sleep for 0.1 seconds to give other threads a chance to run
