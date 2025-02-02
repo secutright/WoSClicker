@@ -95,7 +95,7 @@ class YOLOBot:
                 x = i[1][0]
                 y = i[1][1]
 
-                print(f'name: {name} x: {x} y: {y}')
+                # print(f'name: {name} x: {x} y: {y}')
                 
                 if name == 'healButton':                # Act on data based on name
                     print('Clicking healButton')
