@@ -1,10 +1,6 @@
 import threading
-from concurrent.futures import ThreadPoolExecutor
 from tkinter import IntVar
-from turtle import pos
-from pyautogui import screenshot
 import ttkbootstrap as tkb
-from ultralytics import YOLO
 from YOLOBot import YOLOBot
 
 yolo = YOLOBot()
